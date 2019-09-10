@@ -88,7 +88,7 @@ public class Player_Controller : MonoBehaviour {
             winText.text = "On to level 4!";
             SceneManager.LoadScene(sceneName: "Level_4");
         }
-        else if (currScene.name == "Level_4" && playerScore >= 8)   //Level 3
+        else if (currScene.name == "Level_4" && playerScore >= 10)   //Level 3
         {
             winText.text = "You win!";
             playerControlsEnabled = false;  //Disabling players controls becuase the game is over
