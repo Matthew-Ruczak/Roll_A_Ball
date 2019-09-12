@@ -12,8 +12,11 @@ public class Player_Controller : MonoBehaviour {
     private Rigidbody rb;   //This will hold the component, 'Rigidbody', from the player object
     public Text winText;    //This will hold the text that is displayed when the player has collected all of the objects
     public Text playerScoreText;  //This will hold the object that should have it Text Changed (Set in Unity)
+    public Text timerText; //This will hold the reference to the timer_Text UI
+    private double timeRemaining; //This will hold the time remaining to complete the level
     private int playerScore;    //This will store the current number of objects collected
     private bool playerControlsEnabled; //This controls whether or not the users actions affect the player object
+    private bool isGameOver; //This holds whether or not the game is over
 
     /*      ***Fields End***     */
 
@@ -24,13 +27,53 @@ public class Player_Controller : MonoBehaviour {
         playerScore = 0;    //Starting players score from zero
         updatePlayerScore();
         winText.text = "";  //Clearing the 'winMessage_Text', as the player has not beaten the level
+        timeRemaining = 0;
         playerControlsEnabled = true;   //Enabling players controls
+        isGameOver = false;
+
+        //Setting the time for the current level
+        switch (SceneManager.GetActiveScene().name)    //Getting the current scene
+        {
+            case "Level_1":
+                timeRemaining = 10.0;
+                break;
+            case "Level_2":
+                timeRemaining = 15.0;
+                break;
+            case "Level_3":
+                timeRemaining = 30.0;
+                break;
+            case "Level_4":
+                timeRemaining = 30.0;
+                break;
+            case "Level_5":
+                timeRemaining = 23.0;
+                break;
+            case "Level_6":
+                timeRemaining = 30.0;
+                break;
+        }
     }
 
     //This is called before rendering a frame (Game Code Here)
     void Update()
     {
-    }
+        //Checking if time has ran out
+        if (timeRemaining < 0)
+        {
+            playerControlsEnabled = false;
+            isGameOver = true;
+            winText.text = "Times up! Game Over!";
+        }
+        else
+        {
+            isGameOver = false;
+            //Calculating the time the player has to complete the level since they have started playing
+            timeRemaining -= Time.deltaTime;
+            //Updating the UI
+            timerText.text = "Time Remaining: " + System.Math.Round(timeRemaining, 1).ToString();
+        }
+}
 
     //This is called before performing an physics calculations (Physical Code Here)
     void FixedUpdate()
@@ -91,9 +134,21 @@ public class Player_Controller : MonoBehaviour {
         else if (currScene.name == "Level_4" && playerScore >= 10)   //Level 3
         {
             winText.text = "You win!";
+            isGameOver = true;
+            SceneManager.LoadScene(sceneName: "Level_5");
+            winText.text = "On to level 5!";
+        }
+        else if (currScene.name == "Level_5" && playerScore >= 11)   //Level 3
+        {
+            winText.text = "You win!";
+            SceneManager.LoadScene(sceneName: "Level_6");
+            winText.text = "On to level 6!";
+        }
+        else if (currScene.name == "Level_6" && playerScore >= 25)   //Level 3
+        {
+            winText.text = "You win!";
             playerControlsEnabled = false;  //Disabling players controls becuase the game is over
-            //SceneManager.LoadScene(sceneName: "Level_5");
-            //winText.text = "On to level 5!";
+            winText.text = "You Win!";
         }
         /*
          * User this as a template for the next level
