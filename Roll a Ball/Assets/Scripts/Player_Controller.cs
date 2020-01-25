@@ -8,8 +8,9 @@ public class Player_Controller : MonoBehaviour {
 
     /*      ***Fields***       */
 
-    public float speed;
-    private Rigidbody rb;   //This will hold the component, 'Rigidbody', from the player object
+    public float player_Speed;
+    public float player_Max_Speed;
+    private Rigidbody player;   //This will hold the component, 'Rigidbody', from the player object
     public Text winText;    //This will hold the text that is displayed when the player has collected all of the objects
     public Text playerScoreText;  //This will hold the object that should have it Text Changed (Set in Unity)
     public Text timerText; //This will hold the reference to the timer_Text UI
@@ -23,34 +24,35 @@ public class Player_Controller : MonoBehaviour {
     //This is called on the first frame that the current script is active
     void Start()
     {
-        rb = GetComponent<Rigidbody>(); //Getting the 'Rigidbody' component from the player object
+        player = GetComponent<Rigidbody>(); //Getting the 'Rigidbody' component from the player object
         playerScore = 0;    //Starting players score from zero
         updatePlayerScore();
         winText.text = "";  //Clearing the 'winMessage_Text', as the player has not beaten the level
         timeRemaining = 0;
         playerControlsEnabled = true;   //Enabling players controls
         isGameOver = false;
+        player_Speed = 10f;
 
         //Setting the time for the current level
         switch (SceneManager.GetActiveScene().name)    //Getting the current scene
         {
             case "Level_1":
-                timeRemaining = 10.0;
+                timeRemaining = 30.0;
                 break;
             case "Level_2":
-                timeRemaining = 15.0;
+                timeRemaining = 30.0;
                 break;
             case "Level_3":
                 timeRemaining = 30.0;
                 break;
             case "Level_4":
-                timeRemaining = 30.0;
+                timeRemaining = 45.0;
                 break;
             case "Level_5":
-                timeRemaining = 23.0;
+                timeRemaining = 50.0;
                 break;
             case "Level_6":
-                timeRemaining = 30.0;
+                timeRemaining = 60.0;
                 break;
         }
     }
@@ -81,12 +83,44 @@ public class Player_Controller : MonoBehaviour {
         //Checking if the players controls are enabled
         if (playerControlsEnabled)
         {
-            float moveHorizontal = Input.GetAxis("Horizontal"); //Getting the current horizontal value of the player
-            float moveVertical = Input.GetAxis("Vertical"); //Getting the current vertical value of the player
+            float moveXAxis = 0f;
+            float moveZAxis = 0f;
+            Vector3 movement;
 
-            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);     //Turing the modifed X, Y, Z into a Vector
+            //Checking if the user is playing on mobile or on Desktop and then user the correct controls for the platform
+            if (Application.isMobilePlatform)   //Mobile
+            {
+                //Seeing horizontal forces need to be applied
+                if (Input.acceleration.x > 0)
+                {
+                    moveXAxis = 1;
+                    player_Speed = 5;
+                }
+                else if (Input.acceleration.x < 0)
+                {
+                    moveXAxis = -1;
+                }
 
-            rb.AddForce(movement * 10);   //Applying the force to the object (Player)
+                //Seeing if Z-axis forces need to be applied
+                if (Input.acceleration.z > 0)
+                {
+                    moveZAxis = -1;
+                }
+                else if (Input.acceleration.z < 0)
+                {
+                    moveZAxis = 1;
+                }
+                movement = new Vector3(moveXAxis * 6f, 0.0f, moveZAxis * 6f);     //Turning the modifed X, Y, Z into a Vector
+            }
+            else //Desktop
+            {
+                moveXAxis = Input.GetAxis("Horizontal"); //Getting the current horizontal value of the player
+                moveZAxis = Input.GetAxis("Vertical"); //Getting the current vertical value of the player
+                movement = new Vector3(moveXAxis * player_Speed, 0.0f, moveZAxis * player_Speed);     //Turning the modifed X, Y, Z into a Vector
+            }
+
+            //Applying forces
+            player.AddForce(movement );   //Applying the force to the object (Player)
         }
     }
 
