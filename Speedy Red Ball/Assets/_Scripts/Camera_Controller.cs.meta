@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6f6ecdb91101eab469a85261b05d8a1a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player_GameObject: {fileID: 4605505865731393000, guid: 15038a19d12a04945af299f3b679f08e,
+      type: 3}
+  - thirdPersonCamera_CameraObject: {instanceID: 0}
+  - twoDCamera_CameraObject: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
