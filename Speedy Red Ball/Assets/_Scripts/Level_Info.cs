@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Level_Info : MonoBehaviour
 {
-    private static int numberOfLevels = 3;
+    private static int numberOfLevels = 7;
     //Returns the name of the current scene
     public  static string getCurrentSceneName()
     {
@@ -22,6 +22,10 @@ public class Level_Info : MonoBehaviour
             case "Level_1": return 3;
             case "Level_2": return 4;
             case "Level_3": return 17;
+            case "Level_4": return 17;
+            case "Level_5": return 33;
+            case "Level_6": return 35;
+            case "Level_7": return 35;
             default: return -1;
         }
     }
@@ -53,6 +57,14 @@ public class Level_Info : MonoBehaviour
                 return 15.0;
             case "Level_3":
                 return 30.0;
+            case "Level_4":
+                return 60.0;
+            case "Level_5":
+                return 10000.0;
+            case "Level_6":
+                return 10000.0;
+            case "Level_7":
+                return 100000.0;
             default: return 30.0;
         }
     }

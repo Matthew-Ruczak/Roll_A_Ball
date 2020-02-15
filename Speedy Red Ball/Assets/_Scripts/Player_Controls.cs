@@ -17,11 +17,14 @@ public class Player_Controls : MonoBehaviour
     private double timeRemaining;   //Holds how much time the user has to complete the current level
     public static bool isGameOver;
     public static bool isGamePaused;
+    private static bool isPlayingOnMobile;
     /*      *** End of Fields ***     */
+
 
     // Start is called before the first frame update
     void Start()
     {
+        isPlayingOnMobile = Application.isMobilePlatform;   //Checking if the player is playing on mobile
         player_Rigidbody = player_GameObject.GetComponent<Rigidbody>(); //Getting reference to the player's rigidbody component
         player_Speed = 8f;  //Setting the player's default speed
         player_ControlsEnabled = true;  //Enabling Player Controls
@@ -69,7 +72,29 @@ public class Player_Controls : MonoBehaviour
         //Checking if player's controls are enabled
         if (player_ControlsEnabled && !isGamePaused)
         {
-            player_Rigidbody.AddForce(Input.GetAxis("Horizontal") * player_Speed, 0.0f, Input.GetAxis("Vertical") * player_Speed);
+            float forcesToApply_X = 0.0f;
+            float forcesToApply_Z = 0.0f;
+            //Mobile Controls
+            if (isPlayingOnMobile)
+            {
+                //Checking if the acceleration is within the "Deadzone" of the controls
+                if (Input.acceleration.x > 0.6f)
+                {
+                    forcesToApply_X = Input.acceleration.x - 0.6f  * player_Speed;
+                }else if (Input.acceleration.x < -0.6f)
+                {
+                    forcesToApply_X = Input.acceleration.x + 0.6f * player_Speed;
+                }
+                forcesToApply_Z = Input.acceleration.z * player_Speed * -1;
+            }
+            else //Desktop Controls (Default)
+            {
+                forcesToApply_X = Input.GetAxis("Horizontal") * player_Speed;
+                forcesToApply_Z = Input.GetAxis("Vertical") * player_Speed;
+            }
+
+            //Apply Forces to the Player Game Object
+            player_Rigidbody.AddForce(forcesToApply_X, 0.0f, forcesToApply_Z);
         }
     }
 }
